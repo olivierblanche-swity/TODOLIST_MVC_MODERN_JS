@@ -6,6 +6,7 @@ import getTemplate from './template';
 export default class TodoList{
     constructor(data){
         this.domElt = document.querySelector(data.el);
+        this.listDomElt = null;
         DB.setApiURL(data.apiURL);
         this.todos= [];
         this.loadTodos();
@@ -26,7 +27,30 @@ export default class TodoList{
     }
     render(){
         this.domElt.innerHTML = getTemplate();
-        this.todos.forEach(todo => todo.render(this.domElt.querySelector(".todo-list")));
+        this.listDomElt = this.domElt.querySelector(".todo-list");
+        this.todos.forEach(todo => todo.render(this.listDomElt));
         this.renderItemsLeftCount();
+        this.initEvents();
+    }
+    async addTodo(data) {
+        // ajout DB 
+        const todo = await DB.create(data);
+
+        // ajout a this.todo
+        const newTodo = new Todo(todo);
+        this.todos.push(newTodo);
+
+        // ajout dans le dom 
+        newTodo.render(this.listDomElt);
+
+        // relancer le renderItemsLefCount
+        this.renderItemsLeftCount();
+    }
+
+    initEvents (){
+        this.domElt.querySelector('.new-todo').addEventListener("change", (e) => {
+            this.addTodo(e.target.value);
+            e.target.value = "";
+        });
     }
 }
