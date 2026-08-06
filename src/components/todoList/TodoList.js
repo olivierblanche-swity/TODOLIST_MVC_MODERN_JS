@@ -15,8 +15,18 @@ export default class TodoList{
         this.todos = todos.map(todo => new Todo(todo));
         this.render();
     }
+
+    getItemsLeftCount() {
+        return this.todos.filter((todo) => !todo.completed).length;
+    }
+
+    renderItemsLeftCount(){
+        this.domElt.querySelector(".todo-count strong").innerText = 
+            this.getItemsLeftCount();
+    }
     render(){
         this.domElt.innerHTML = getTemplate();
         this.todos.forEach(todo => todo.render(this.domElt.querySelector(".todo-list")));
+        this.renderItemsLeftCount();
     }
 }
