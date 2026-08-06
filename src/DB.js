@@ -19,4 +19,16 @@ export default class DB {
         });
         return response.json();
     }
+
+    static async updateOne(data){
+        const response = await fetch(this.apiURL + "todos/" + data.id, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                content: data.content,
+                completed: data.completed,
+            }),
+        });
+        return response.json();
+    }
 }

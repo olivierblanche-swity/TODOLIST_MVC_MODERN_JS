@@ -13,7 +13,7 @@ export default class TodoList{
     }
     async loadTodos(){
         const todos = await DB.findALL();
-        this.todos = todos.map(todo => new Todo(todo));
+        this.todos = todos.map(todo => new Todo(todo, () => this.renderItemsLeftCount()));
         this.render();
     }
 
@@ -33,11 +33,13 @@ export default class TodoList{
         this.initEvents();
     }
     async addTodo(data) {
+        if (!data.trim()) return;
+
         // ajout DB 
         const todo = await DB.create(data);
 
         // ajout a this.todo
-        const newTodo = new Todo(todo);
+        const newTodo = new Todo(todo, () => this.renderItemsLeftCount());
         this.todos.push(newTodo);
 
         // ajout dans le dom 
