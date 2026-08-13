@@ -32,7 +32,7 @@ export default class TodoList{
     render(){
         this.domElt.innerHTML = getTemplate();
         this.listDomElt = this.domElt.querySelector(".todo-list");
-        this.todos.forEach(todo => todo.render(this.listDomElt));
+        this.todos.forEach((todo) => this.listDomElt.append(todo.render()));
         this.renderItemsLeftCount();
         this.initEvents();
     }
@@ -51,7 +51,7 @@ export default class TodoList{
         this.todos.push(newTodo);
 
         // ajout dans le dom 
-        newTodo.render(this.listDomElt);
+        newTodo.listDomElt.append(newTodo.render());
 
         // relancer le renderItemsLefCount
         this.renderItemsLeftCount();

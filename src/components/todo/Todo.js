@@ -11,12 +11,12 @@ export default class Todo {
         this.onUpdate = onUpdate;
         this.onDelete = onDelete;
     }
-    render(el){
+    render(){
         const template = document.createElement('template');
         template.innerHTML = getTemplate(this);
         this.domElt = template.content.firstElementChild;
         this.initEvents();
-        el.append(this.domElt);
+        return this.domElt;
     }
 
     async toggleCompleted() {
