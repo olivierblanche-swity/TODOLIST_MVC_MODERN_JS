@@ -33,13 +33,31 @@ export default class Todo {
         return todo;
     }
 
+    async update(data){
+        if (!data.trim()) return;
+
+        this.content = data;
+        this.domElt.querySelector('label').innerText = this.content;
+        this.domElt.classList.remove("editing");
+        return await DB.updateOne(this);
+
+    }
+
     initEvents() {
         this.domElt.querySelector('.toggle').addEventListener('change', (e)=>{
             this.toggleCompleted();
         });
 
-        this.domElt.querySelector('.destroy').addEventListener('click', () => {
+        this.domElt.querySelector('.destroy').addEventListener('click', (e) => {
             this.onDelete(this.id);
+        });
+
+        this.domElt.querySelector("label").addEventListener('dblclick', (e) => {
+            this.domElt.classList.add("editing");
+        });
+
+        this.domElt.querySelector(".edit").addEventListener('change', (e) => {
+            this.update(e.target.value);
         });
     }
 }
