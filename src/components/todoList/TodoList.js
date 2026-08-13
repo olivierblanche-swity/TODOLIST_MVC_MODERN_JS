@@ -13,7 +13,11 @@ export default class TodoList{
     }
     async loadTodos(){
         const todos = await DB.findALL();
-        this.todos = todos.map(todo => new Todo(todo, () => this.renderItemsLeftCount()));
+        this.todos = todos.map(todo => new Todo(
+            todo,
+            () => this.renderItemsLeftCount(),
+            (id) => this.deleteOneById(id),
+        ));
         this.render();
     }
 
@@ -39,13 +43,28 @@ export default class TodoList{
         const todo = await DB.create(data);
 
         // ajout a this.todo
-        const newTodo = new Todo(todo, () => this.renderItemsLeftCount());
+        const newTodo = new Todo(
+            todo,
+            () => this.renderItemsLeftCount(),
+            (id) => this.deleteOneById(id),
+        );
         this.todos.push(newTodo);
 
         // ajout dans le dom 
         newTodo.render(this.listDomElt);
 
         // relancer le renderItemsLefCount
+        this.renderItemsLeftCount();
+    }
+
+    async deleteOneById(id){
+        //Supprimer de la DB
+        await DB.deleteOneById(id);
+        //Supprimer des todos 
+        this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1);
+        //Supprimer du DOM
+        this.domElt.querySelector(`[data-id="${id}"]`).remove();
+        // relancer le renderItemsLeftCount()
         this.renderItemsLeftCount();
     }
 

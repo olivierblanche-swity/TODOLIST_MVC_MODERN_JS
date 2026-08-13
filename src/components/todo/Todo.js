@@ -2,13 +2,14 @@ import getTemplate from "./template";
 import DB from '../../DB';
 
 export default class Todo {
-    constructor(data, onUpdate = () => {}) {
+    constructor(data, onUpdate = () => {}, onDelete = () => {}) {
         this.id = data.id;
         this.content = data.content;
         this.completed = data.completed;
         this.createdAt = data.createdAt;
         this.domElt = null;
         this.onUpdate = onUpdate;
+        this.onDelete = onDelete;
     }
     render(el){
         const template = document.createElement('template');
@@ -35,6 +36,10 @@ export default class Todo {
     initEvents() {
         this.domElt.querySelector('.toggle').addEventListener('change', (e)=>{
             this.toggleCompleted();
-        })
+        });
+
+        this.domElt.querySelector('.destroy').addEventListener('click', () => {
+            this.onDelete(this.id);
+        });
     }
 }
